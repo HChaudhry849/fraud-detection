@@ -1,0 +1,43 @@
+timestamp,amount,location,type,is_fraud
+2024-05-01 10:30:00,55.20,London,payment,0
+2024-05-01 11:15:00,1200.00,New York,transfer,0
+2024-05-01 12:05:00,15.00,London,payment,0
+2024-05-01 14:20:00,5000.00,Unknown,transfer,1
+2024-05-01 15:45:00,22.10,Paris,payment,0
+2024-05-01 16:10:00,950.00,Berlin,withdrawal,0
+2024-05-01 18:00:00,-50.00,London,payment,0
+2024-05-01 19:30:00,10000.00,Unknown,transfer,1
+2024-05-02 09:00:00,5.00,Paris,payment,0
+2024-05-02 10:15:00,,London,withdrawal,0
+2024-05-02 11:00:00,45.00,London,payment,0
+2024-05-02 12:30:00,6000.00,Unknown,transfer,1
+2024-05-02 13:00:00,12.50,Berlin,payment,0
+2024-05-02 14:00:00,88.00,Paris,payment,0
+2024-05-02 15:00:00,7500.00,Unknown,transfer,1
+2024-05-02 16:00:00,200.00,New York,withdrawal,0
+2024-05-03 08:30:00,15.25,London,payment,0
+2024-05-03 09:15:00,30.00,Paris,payment,0
+2024-05-03 10:45:00,4200.00,Unknown,transfer,1
+2024-05-03 11:30:00,55.00,Berlin,payment,0
+2024-05-03 12:15:00,-10.00,London,payment,0
+2024-05-03 13:45:00,120.00,London,withdrawal,0
+2024-05-03 15:00:00,9000.00,Unknown,transfer,1
+2024-05-03 16:30:00,45.10,Paris,payment,0
+2024-05-04 09:00:00,18.00,Berlin,payment,0
+2024-05-04 10:00:00,,New York,transfer,0
+2024-05-04 11:00:00,5200.00,Unknown,transfer,1
+2024-05-04 12:00:00,35.00,London,payment,0
+2024-05-04 13:00:00,11.00,Paris,payment,0
+2024-05-04 14:00:00,6800.00,Unknown,transfer,1
+2024-05-04 15:30:00,95.00,Berlin,withdrawal,0
+2024-05-05 08:00:00,25.00,London,payment,0
+2024-05-05 09:30:00,8000.00,Unknown,transfer,1
+2024-05-05 10:45:00,42.00,Paris,payment,0
+2024-05-05 12:00:00,150.00,New York,withdrawal,0
+2024-05-05 14:00:00,3300.00,Unknown,transfer,1
+2024-05-05 15:30:00,22.00,London,payment,0
+2024-05-06 10:00:00,12.00,Berlin,payment,0
+2024-05-06 11:30:00,9500.00,Unknown,transfer,1
+2024-05-06 13:00:00,55.00,Paris,payment,0
+2024-05-06 14:30:00,7200.00,Unknown,transfer,1
+2024-05-06 16:00:00,85.00,London,withdrawal,0

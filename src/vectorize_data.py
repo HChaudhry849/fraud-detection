@@ -86,12 +86,12 @@ vd.vectorize_data()
 # 1. Load Data (Done)
 # 2. Split Data (Done)
 # 3. Vectorize Data (Done)
-####Saturday
-# 4. Load Model
-# 5. Train Model
-# 6. Evaluate Model
+# 4. Load Model (Done)
+# 5. Train Model (Done)
+# 6. Evaluate Model (Done)
+# 7. Experiment Tracking
 
-#Steps to Follow (Phase 3)
+#Steps to Follow (Phase 2)
 # 1. Model Registration 
 # 2. Versioning and Staging 
 # 3. Artifact Logging 

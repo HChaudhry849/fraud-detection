@@ -15,6 +15,14 @@ class VectorizeData:
         self.X = None
         self.Y = None
         self.PATH = 'data/processed/processed_data.parquet'
+    
+    def prepare(self):
+        """One method to rule them all - ensures data is ready."""
+        self.load_data()
+        self.preprocess_time()
+        self.split_data()
+        self.vectorize_data()
+        return self # Allows chaining
 
     def load_data(self):
         try:
@@ -75,13 +83,6 @@ class VectorizeData:
         return self.X_train_vectorized,  self.X_test_vectorized
 
 
-vd = VectorizeData()
-vd.load_data()
-vd.preprocess_time()
-vd.split_data()
-vd.vectorize_data()
-
-
 #Steps to Follow (Next Phase)
 # 1. Load Data (Done)
 # 2. Split Data (Done)
@@ -89,10 +90,12 @@ vd.vectorize_data()
 # 4. Load Model (Done)
 # 5. Train Model (Done)
 # 6. Evaluate Model (Done)
-# 7. Experiment Tracking
+# 7. Experiment Tracking (Done)
 
 #Steps to Follow (Phase 2)
-# 1. Model Registration 
-# 2. Versioning and Staging 
-# 3. Artifact Logging 
-# 4. Deployment 
+# 1. Model and Management Registry 
+# 2. Model Versioning
+# 3. Containerization 
+# 4. AWS 
+# 5. Workflow and Orchestration 
+# 6. CI/CD 

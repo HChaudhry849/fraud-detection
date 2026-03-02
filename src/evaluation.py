@@ -1,9 +1,4 @@
 from sklearn.metrics import f1_score, recall_score
-import train_model
-import vectorize_data
-
-tm = train_model.TrainModel()
-vd = vectorize_data.VectorizeData()
 
 class Evaluation():
 
@@ -31,5 +26,20 @@ class Evaluation():
         
         return self.recall, self.f_score
 
-ev = Evaluation()
-ev.evaluate_model()
+# WRAP THIS IN THE PROTECTIVE BLOCK
+if __name__ == "__main__":
+    import vectorize_data
+    import train_model
+    
+    # 1. Prepare Data
+    vd_instance = vectorize_data.VectorizeData().prepare()
+    
+    # 2. Train Model
+    tm_instance = train_model.TrainModel(vd_instance)
+    tm_instance.load_model()
+    tm_instance.feed_model()
+    tm_instance.predict()
+    
+    # 3. Evaluate
+    ev = Evaluation(tm_instance, vd_instance)
+    ev.evaluate_model()

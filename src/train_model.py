@@ -13,7 +13,7 @@ class TrainModel:
         self.model = None
 
     def load_model(self):
-        self.model = TabPFNClassifier(device='cpu', N_ensemble_configurations=32)
+        self.model = TabPFNClassifier(device='cpu')
         return self.model
 
     def feed_model(self):
@@ -27,8 +27,10 @@ class TrainModel:
     def seeResult(self):
         print(self.predictedResult)
 
-tm = TrainModel()
-tm.load_model()
-tm.feed_model()
+
+vd_instance = vd.prepare()      # Prepares the data
+tm = TrainModel(vd_instance)    # Links the data
+tm.load_model()                 # NEW: This actually creates the TabPFNClassifier
+tm.feed_model()                 # Now this works because self.model is no longer None
 tm.predict()
 tm.seeResult()

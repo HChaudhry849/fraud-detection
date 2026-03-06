@@ -21,10 +21,12 @@ class Evaluation():
 
         if self.recall >= THRESHOLDS["recall"] and self.f_score >= THRESHOLDS["f1"]:
             print("Model passed evaluation")
+            passed = True
         else:
             print("Model failed evaluation")
+            passed = False
         
-        return self.recall, self.f_score
+        return passed, self.recall, self.f_score
 
 # WRAP THIS IN THE PROTECTIVE BLOCK
 if __name__ == "__main__":

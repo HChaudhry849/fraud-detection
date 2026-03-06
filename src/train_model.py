@@ -1,4 +1,5 @@
 from tabpfn import TabPFNClassifier
+from sklearn.pipeline import Pipeline
 import vectorize_data
 
 vd = vectorize_data.VectorizeData()
@@ -11,6 +12,7 @@ class TrainModel:
         self.y_train = vd.y_train
         self.x_test = vd.X_test_vectorized
         self.model = None
+        self.vd = vd_instance # Store the whole instance so we can get the transformer later
 
     def load_model(self):
         self.model = TabPFNClassifier(device='cpu')
@@ -26,6 +28,14 @@ class TrainModel:
     
     def seeResult(self):
         print(self.predictedResult)
+    
+    def create_unified_model(self):
+        # We glue the DICTIONARY (transformer) to the BRAIN (model)
+        model_pipeline = Pipeline([
+            ("vectorizer", self.vd.transformer), 
+            ("classifier", self.model)
+        ])
+        return model_pipeline
 
 
 vd_instance = vd.prepare()      # Prepares the data

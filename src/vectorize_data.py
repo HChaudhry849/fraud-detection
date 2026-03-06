@@ -15,6 +15,37 @@ class VectorizeData:
         self.X = None
         self.Y = None
         self.PATH = 'data/processed/processed_data.parquet'
+        # Think of this as an empty 'Translator Handbook.'
+        # Right now, it's blank. We are just making a spot on the shelf 
+        # to keep it so the shop (our code) doesn't lose it.
+        self.transformer = None 
+    
+    def vectorize_data(self):
+        # 1. THE TRANSLATOR'S TOOLS:
+        # Here we decide HOW we will translate. 
+        # 'StandardScaler' is for measuring amounts (scoops of sugar).
+        # 'OneHotEncoder' is for labels (Strawberry vs. Banana).
+        self.transformer = ColumnTransformer(transformers=[
+            ('t1', StandardScaler(), ['amount']),
+            ('t2', OrdinalEncoder(), ['location']),
+            ('t3', OneHotEncoder(), ['type']), 
+            ('t4', StandardScaler(), ['hour']), 
+            ('t5', StandardScaler(), ['day_of_week'])
+        ], remainder='passthrough')
+        
+        # 2. LEARNING THE NEIGHBORHOOD (The 'Fit' step):
+        # The translator looks at the data and learns the rules.
+        # It writes down: "In this shop, London is Code #1 and a 'Large' is 16oz."
+        # This fills the 'Handbook' with real information.
+        self.X_train_vectorized = self.transformer.fit_transform(self.X_train)
+        # 3. DOING THE WORK (The 'Transform' step):
+        # Now that the Handbook is full, the translator uses those 
+        # EXACT same rules to turn the test data into numbers.
+        self.X_test_vectorized = self.transformer.transform(self.X_test)
+
+        # We return the numbers, but the 'self.transformer' handbook 
+        # stays safe inside this class so we can glue it to the brain la
+        return self.X_train_vectorized, self.X_test_vectorized
     
     def prepare(self):
         """One method to rule them all - ensures data is ready."""
@@ -91,11 +122,10 @@ class VectorizeData:
 # 5. Train Model (Done)
 # 6. Evaluate Model (Done)
 # 7. Experiment Tracking (Done)
+# 8. Model and Management Versioning & Registry (Done)
 
 #Steps to Follow (Phase 2)
-# 1. Model and Management Registry 
-# 2. Model Versioning
-# 3. Containerization 
-# 4. AWS 
-# 5. Workflow and Orchestration 
-# 6. CI/CD 
+# 1. Containerization (Data Pipeline, Training Pipeline, Inference Pipeline with Flask)
+# 2. AWS (Learning)
+# 3. Workflow Orchestration & Deployment (Putting it all together )
+# 4. CI/CD (See it run automatically and Monitor)

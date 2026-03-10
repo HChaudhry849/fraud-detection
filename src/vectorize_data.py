@@ -19,16 +19,22 @@ class VectorizeData:
         # Right now, it's blank. We are just making a spot on the shelf 
         # to keep it so the shop (our code) doesn't lose it.
         self.transformer = None 
-    
+        # To store results for training
+        self.X_train_vectorized = None
+        self.X_test_vectorized = None
+
     def vectorize_data(self):
+        """
+        Learns the rules from X_train and prepares the translator (transformer).
+        This is the method that turns 5 raw columns into the 7 numeric columns.
+        """
         # 1. THE TRANSLATOR'S TOOLS:
-        # Here we decide HOW we will translate. 
-        # 'StandardScaler' is for measuring amounts (scoops of sugar).
-        # 'OneHotEncoder' is for labels (Strawberry vs. Banana).
+        # We assign it to self.transformer so the rest of the project can access it.
+        # Added handle_unknown='ignore' so the Flask app doesn't crash on new categories.
         self.transformer = ColumnTransformer(transformers=[
             ('t1', StandardScaler(), ['amount']),
             ('t2', OrdinalEncoder(), ['location']),
-            ('t3', OneHotEncoder(), ['type']), 
+            ('t3', OneHotEncoder(handle_unknown='ignore'), ['type']), 
             ('t4', StandardScaler(), ['hour']), 
             ('t5', StandardScaler(), ['day_of_week'])
         ], remainder='passthrough')
@@ -36,15 +42,16 @@ class VectorizeData:
         # 2. LEARNING THE NEIGHBORHOOD (The 'Fit' step):
         # The translator looks at the data and learns the rules.
         # It writes down: "In this shop, London is Code #1 and a 'Large' is 16oz."
-        # This fills the 'Handbook' with real information.
+        # This fills the 'Handbook' (self.transformer) with real information.
         self.X_train_vectorized = self.transformer.fit_transform(self.X_train)
+        
         # 3. DOING THE WORK (The 'Transform' step):
         # Now that the Handbook is full, the translator uses those 
         # EXACT same rules to turn the test data into numbers.
         self.X_test_vectorized = self.transformer.transform(self.X_test)
 
-        # We return the numbers, but the 'self.transformer' handbook 
-        # stays safe inside this class so we can glue it to the brain la
+        # We return the numbers for training, but the 'self.transformer' handbook 
+        # is now stored in the class instance so we can glue it to the brain later.
         return self.X_train_vectorized, self.X_test_vectorized
     
     def prepare(self):
@@ -52,20 +59,20 @@ class VectorizeData:
         self.load_data()
         self.preprocess_time()
         self.split_data()
-        self.vectorize_data()
+        self.vectorize_data() # This now correctly populates self.transformer
         return self # Allows chaining
 
     def load_data(self):
         try:
             self.data = pd.read_parquet(self.PATH)
-            print(self.data.dtypes)
+            print(f"Data loaded successfully. Dtypes:\n{self.data.dtypes}")
         except Exception as e:
-            raise RuntimeError("Failed to load file: {e}")
+            raise RuntimeError(f"Failed to load file: {e}")
         
         return self.data
     
-    #function handles timestamp column, breaks into hour and day_of_week, drops original column
     def preprocess_time(self):
+        """Handles timestamp column, breaks into hour and day_of_week, drops original column."""
         # Convert the string object to a formal datetime format
         self.data['timestamp'] = pd.to_datetime(self.data['timestamp'])
         
@@ -79,40 +86,19 @@ class VectorizeData:
         
         print("Timestamp converted to numeric 'hour' and 'day_of_week'.")
 
-    #Split the data into x and y, Y is the target e.g. what the model needs to predict
-    #Split the data into X, X is the data the model trains and to predict Y
     def split_data(self):
-        #split all the columns required 
+        """Split the data into X (features) and Y (target/is_fraud)."""
+        # split all the columns required 
         self.X = self.data[["amount", "location", "type", "hour", "day_of_week"]]
-        #important note: this column is already 0 or 1 therefore it does not need any vectorization 
+        # important note: this column is already 0 or 1 therefore it does not need any vectorization 
         self.Y = self.data["is_fraud"]    
-        #the test size is defined as 20% of the data and random shuffle means mixing up the rows of your data like a deck of cards before you deal them.
-        #42 is a seed that ensures you get the exact same "random" shuffle every time you run the code.
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.Y, test_size=0.20, random_state=42)
-        return self.X_train, self.X_test, self.y_train, self.y_test
-
-    def vectorize_data(self):
-        #Column transformer allows us to apply different vectorization techniques quickly 
-        #As we have different types of columns we need different vectorization techniques 
-        #Vectorization is the process of turning data into a specific vocabulary that a computer can understand
-        #After vectorization we end up with a dictionary e.g. London becomes 1 
-        transformer = ColumnTransformer(transformers=[
-            ('t1',StandardScaler(),['amount']),
-            ('t2',OrdinalEncoder(),['location']),
-            ('t3',OneHotEncoder(),['type']), 
-            ('t4',StandardScaler(),['hour']), 
-            ('t5',StandardScaler(),['day_of_week'])
-        ],remainder='passthrough')
         
-        #fit transform applies the rules e.g. for this column apply this vectorization, it uses the data and builds the rule
-        self.X_train_vectorized = transformer.fit_transform(self.X_train)
-        #here no rules are built, we simply take the test data that we will use later and use the existing dictionary, 
-        #to change the test data into same vocabulary that the computer can understand
-        self.X_test_vectorized = transformer.transform(self.X_test)
-
-        #we return the saved vectorized data to use for training 
-        return self.X_train_vectorized,  self.X_test_vectorized
-
+        # the test size is defined as 20% of the data and random shuffle means mixing up the rows.
+        # 42 is a seed that ensures you get the exact same "random" shuffle every time.
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            self.X, self.Y, test_size=0.20, random_state=42
+        )
+        return self.X_train, self.X_test, self.y_train, self.y_test
 
 #Steps to Follow (Next Phase)
 # 1. Load Data (Done)

@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/Rajia/Desktop/Python/mops-workflow/src/mlruns/1/models/m-97cb356444e14c7d88021e2eeceb415a/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.0
+model_id: m-97cb356444e14c7d88021e2eeceb415a
+model_size_bytes: 43023023
+model_uuid: m-97cb356444e14c7d88021e2eeceb415a
+prompts: null
+run_id: 04cc3c07f1ca400395847a807af8e13f
+utc_time_created: '2026-03-10 00:48:53.512592'

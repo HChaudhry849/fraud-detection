@@ -1,3 +1,4 @@
+#mlflow ui --backend-store-uri sqlite:///mlflow.db 
 import data_pipeline as dp
 import vectorize_data as vd
 import train_model as tm

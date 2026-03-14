@@ -1,0 +1,37 @@
+artifact_path: file:C:/Users/Rajia/Desktop/Python/mops-workflow/mlruns/1/models/m-442cbd1bada54e1883076bb084e938d1/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.10.0
+model_id: m-442cbd1bada54e1883076bb084e938d1
+model_size_bytes: 43046925
+model_uuid: m-442cbd1bada54e1883076bb084e938d1
+prompts: null
+run_id: faaf6f694be7440abceafbd06f43e8ff
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "amount", "required": true}, {"type": "string",
+    "name": "location", "required": true}, {"type": "string", "name": "type", "required":
+    true}, {"type": "integer", "name": "hour", "required": true}, {"type": "integer",
+    "name": "day_of_week", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-03-14 01:00:20.280303'

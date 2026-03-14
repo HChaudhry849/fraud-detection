@@ -5,9 +5,17 @@ import train_model as tm
 import evaluation as ev 
 import mlflow
 from mlflow.models import infer_signature # Added for the fix
+import os
 
-# 1. Point MLflow to your database file
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
+# Get the absolute path to the database folder
+# This assumes your script is in /src and database is in root
+script_dir = os.path.dirname(os.path.abspath(__file__))
+base_path = os.path.abspath(os.path.join(script_dir, "..", "database"))
+mlruns_path = os.path.join(base_path, "mlruns")
+# Force MLflow to use this specific folder for files
+os.environ["MLFLOW_ARTIFACT_ROOT"] = mlruns_path 
+# Now set your URI
+mlflow.set_tracking_uri(f"sqlite:///{base_path}/mlflow.db")
 # 2. Name the project 
 mlflow.set_experiment("Fraud_Detection_System")
 

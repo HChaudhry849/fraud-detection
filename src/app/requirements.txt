@@ -1,0 +1,6 @@
+flask
+pandas
+mlflow
+python-dotenv
+scikit-learn
+tabpfn

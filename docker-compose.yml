@@ -1,0 +1,21 @@
+services:
+
+    flask-service:
+      build:
+        context: .
+        dockerfile: src/app/Dockerfile
+      ports:
+        - "5050:5050"
+# Link the local Windows database folder to the container's /app/database folder so they share the same live data. Works like portal
+      volumes:
+        - ./database:/app/database
+        - ./mlruns:/app/mlruns
+      environment:
+# Overrides the env in the folder 
+        - MLFLOW_TRACKING_URI=sqlite:////app/database/mlflow.db
+        - MODEL_VERSION=production  
+      healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:5050/health"]
+          interval: 5s
+          timeout: 3s
+          retries: 20

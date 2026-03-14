@@ -109,6 +109,7 @@ class VectorizeData:
 # 6. Evaluate Model (Done)
 # 7. Experiment Tracking (Done)
 # 8. Model and Management Versioning & Registry (Done)
+# 9. Flask App (Done)
 
 #Steps to Follow (Phase 2)
 # 1. Containerization (Data Pipeline, Training Pipeline, Inference Pipeline with Flask)

@@ -1,26 +1,43 @@
-#mlflow ui --backend-store-uri sqlite:///mlflow.db 
+# mlflow ui --backend-store-uri sqlite:///mlflow.db 
 import data_pipeline as dp
 import vectorize_data as vd
 import train_model as tm
 import evaluation as ev 
 import mlflow
-from mlflow.models import infer_signature # Added for the fix
+from mlflow.models import infer_signature 
 import os
 
-# Get the absolute path to the database folder
-# This assumes your script is in /src and database is in root
-script_dir = os.path.dirname(os.path.abspath(__file__))
-base_path = os.path.abspath(os.path.join(script_dir, "..", "database"))
-mlruns_path = os.path.join(base_path, "mlruns")
-# Force MLflow to use this specific folder for files
-os.environ["MLFLOW_ARTIFACT_ROOT"] = mlruns_path 
-# Now set your URI
-mlflow.set_tracking_uri(f"sqlite:///{base_path}/mlflow.db")
-# 2. Name the project 
+# --- ENVIRONMENT-AWARE MLFLOW CONFIG ---
+# 1. Check if we are in Docker (Variable provided by docker-compose)
+# 2. If not, calculate the local Windows path
+env_uri = os.getenv("MLFLOW_TRACKING_URI")
+
+if env_uri:
+    mlflow.set_tracking_uri(env_uri)
+    # Explicitly tell Docker where the artifacts go so it matches the volume
+    os.environ["MLFLOW_ARTIFACT_ROOT"] = "/app/mlruns" 
+    print(f"--- Running in DOCKER mode: Using {env_uri} ---")
+else:
+    # We are on Windows Local
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.abspath(os.path.join(script_dir, "..", "database"))
+    local_uri = f"sqlite:///{os.path.join(base_path, 'mlflow.db')}"
+    mlflow.set_tracking_uri(local_uri)
+    
+    # Ensure local directory exists for Windows
+    os.makedirs(base_path, exist_ok=True)
+    
+    # Sync Artifact path for local runs
+    mlruns_path = os.path.join(base_path, "mlruns")
+    os.environ["MLFLOW_ARTIFACT_ROOT"] = mlruns_path 
+    print(f"--- Running in LOCAL mode: Using {local_uri} ---")
+
+# 3. Name the project 
 mlflow.set_experiment("Fraud_Detection_System")
 
 class Main:
     def __init__(self):
+        # start_run will now use the URI set above automatically
         with mlflow.start_run():
             self.DP = dp.DataPipeline()
             # 1. Setup Data
@@ -47,29 +64,20 @@ class Main:
                 # Get the unified Pipeline (Vectorizer + Brain)
                 pipeline_model = self.TM.create_unified_model()
                 
-               # --- THE "HAPPY MEAL BOX" FIX ---
-
-                # 1. We look at the "Questions" (The 5 things: Amount, Location, Type, Hour, Day)
-                # 2. We look at the "Answer" (Is it Fraud? Yes or No)
-                # 3. We write a "Label" (Signature) that says: 
-                #    "To play with this toy, you must give me those 5 specific questions!"
-
+                # Create the Signature (The Schema Label)
                 signature = infer_signature(self.VP.X_train, self.TM.predict())
 
-                # Now, when you save the model, you aren't just saving a 'brain.'
-                # You are saving the 'Brain' + 'The Translator' + 'The Instruction Manual' (Signature).
-                
-                # We also provide a small example of the raw input
+                # Example for debugging
                 input_example = self.VP.X_train.iloc[[0]]
 
+                # Log and Register the model
                 mlflow.sklearn.log_model(
                     sk_model=pipeline_model,
                     artifact_path="fraud_model",
                     registered_model_name="Fraud_Detection_Service",
-                    signature=signature,      # Tells MLflow the 5-column schema
-                    input_example=input_example # Helps debug data types
+                    signature=signature,
+                    input_example=input_example
                 )
-                # --- FIX ENDS HERE ---
                 
                 print("Model passed! Registered as a new version with Schema.")
             else:

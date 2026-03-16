@@ -1,6 +1,21 @@
-flask
+# Data Processing
 pandas
-mlflow
-python-dotenv
+pyarrow
+fastparquet
+
+# Core ML Engine (CPU Optimized)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+
+# Machine Learning
 scikit-learn
 tabpfn
+
+# MLOps & Environment
+mlflow
+python-dotenv
+flask
+
+# Storage & Compatibility
+setuptools

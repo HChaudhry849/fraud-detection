@@ -1,0 +1,20 @@
+
+# Data Processing
+pandas
+pyarrow
+fastparquet
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+# Core CPU logic - install this first!
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+# Machine Learning
+scikit-learn
+tabpfn
+
+# MLOps
+mlflow
+python-dotenv
+
+# Storage
+setuptools
